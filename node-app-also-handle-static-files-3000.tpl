@@ -1,0 +1,30 @@
+server {
+    listen      %ip%:%proxy_port%;
+    server_name %domain_idn% %alias_idn%;
+    error_log  /var/log/%web_system%/domains/%domain%.error.log error;
+
+    location / {
+        # reverse proxy for next server
+        proxy_pass http://localhost:3000;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection 'upgrade';
+        proxy_set_header Host $host;
+        proxy_cache_bypass $http_upgrade;
+      
+        # we need to remove this 404 handling
+        # because next's _next folder and own handling
+        # try_files $uri $uri/ =404;
+    }
+
+    location ~ /\.ht    {return 404;}
+    location ~ /\.env   {return 404;}
+    location ~ /\.svn/  {return 404;}
+    location ~ /\.git/  {return 404;}
+    location ~ /\.hg/   {return 404;}
+    location ~ /\.bzr/  {return 404;}
+
+    disable_symlinks if_not_owner from=%docroot%;
+
+    include %home%/%user%/conf/web/nginx.%domain%.conf*;
+}
