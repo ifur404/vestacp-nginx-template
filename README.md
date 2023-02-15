@@ -1,2 +1,4 @@
 ## Nginx template location :
-/usr/local/vesta/data/templates/web/nginx
+```shell
+root@ifur: /usr/local/vesta/data/templates/web/nginx
+```
